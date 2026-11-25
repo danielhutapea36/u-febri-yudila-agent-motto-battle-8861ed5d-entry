@@ -28,6 +28,11 @@ def main() -> int:
     if not ENTRY.strip():
         print("entry is only white space", file=sys.stderr)
         return 1
+    if "\n" in ENTRY or "\r" in ENTRY:
+        # A motto is one profile line: a stray newline would break the gate's
+        # "one text" reading and the judge's side-by-side display.
+        print("entry must be a single line", file=sys.stderr)
+        return 1
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
@@ -46,6 +51,7 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
+    print("wrote entry.txt: %d characters" % len(written))
     return 0
 
 
